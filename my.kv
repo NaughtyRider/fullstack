@@ -1,0 +1,17 @@
+<ShowScatter>:
+    orientation: 'vertical'
+    TextInput:
+        id: mytext
+        font_size: 150
+        size_hint_y: None
+        height: 200
+        text: "default"
+        on_text:root.change_label_color()
+    FloatLayout:
+        Scatter:
+            Label:
+                id: my_label
+                text: mytext.text + str(mytext.font_size)
+                font_size: 150
+                color: [1,0,0,1]
+
