@@ -2,15 +2,34 @@
 import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
+import sqlite3
 
 kivy.require('2.0.0')
-
 # Import your screens
 from screens.login import LoginScreen
 from screens.mainfile import First
 from screens.hello import HelloWorldScreen
 from screens.sania import HelloSaniaScreen
 from screens.add_screen import Add_detail
+from screens.Review import Review
+
+def init_db():
+    database='entries'
+    table='valuess'
+    conn = sqlite3.connect(f'{database}.db')
+    c = conn.cursor()
+    # c.execute('drop table valuess')
+    c.execute(f'''CREATE TABLE IF NOT EXISTS {table} (id INTEGER PRIMARY KEY AUTOINCREMENT,from_time TEXT,to_time TEXT,activity TEXT)''')
+    conn.commit()
+    table_list = [a for a in c.execute(f"SELECT name FROM sqlite_master WHERE type = 'table' ")]
+        # here is you table list
+    print(table_list)
+    c.execute(f"SELECT * FROM {table} ")
+    data=c.fetchall()
+        # here is you table list
+    print(data)
+    conn.close()
+init_db()
 
 class MyApp(App):
     def build(self):
@@ -18,9 +37,10 @@ class MyApp(App):
         sm.add_widget(LoginScreen(name='login'))
         sm.add_widget(First(name='main'))
         sm.add_widget(Add_detail(name='add'))
+        sm.add_widget(Review(name='review'))
         sm.add_widget(HelloWorldScreen(name='world1'))
         sm.add_widget(HelloSaniaScreen(name='sania'))
-        sm.current = 'main'
+        sm.current = 'review'
         return sm
 
 if __name__ == '__main__':
