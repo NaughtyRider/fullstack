@@ -1,7 +1,7 @@
 
 import kivy
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import * #ScreenManager,SlideTransition,WipeTransition
 import sqlite3
 
 kivy.require('2.0.0')
@@ -11,6 +11,7 @@ from screens.mainfile import First
 from screens.hello import HelloWorldScreen
 from screens.sania import HelloSaniaScreen
 from screens.add_screen import Add_detail
+from screens.update_record import Update_record
 from screens.Review import Review
 
 def init_db():
@@ -33,14 +34,15 @@ init_db()
 
 class MyApp(App):
     def build(self):
-        sm = ScreenManager()
+        sm = ScreenManager(transition=WipeTransition()) #to change screen transition can use also FallOutTransition()
         sm.add_widget(LoginScreen(name='login'))
         sm.add_widget(First(name='main'))
         sm.add_widget(Add_detail(name='add'))
         sm.add_widget(Review(name='review'))
+        sm.add_widget(Update_record(name='Update_record'))
         sm.add_widget(HelloWorldScreen(name='world1'))
         sm.add_widget(HelloSaniaScreen(name='sania'))
-        sm.current = 'review'
+        sm.current = 'Update_record'
         return sm
 
 if __name__ == '__main__':

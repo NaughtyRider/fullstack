@@ -1,69 +1,62 @@
-import sqlite3
+from turtle import right
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.uix.scrollview import ScrollView
 
 class Review(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.layout = BoxLayout(orientation='vertical')
-        # self.button_layout = BoxLayout(orientation='horizontal')
-        self.button_layout = GridLayout(cols=2, row_default_height=40, row_force_default=True,size_hint_y=0.1)
-        self.table = GridLayout(cols=4, row_default_height=40, row_force_default=True,size_hint_y=None)
-        self.table.bind(minimum_height=self.table.setter('height'))
-        self.scroll_view = ScrollView(size_hint=(1,0.9), size=(400, 300))
+        # ... (HelloWorldScreen code - same as before)
 
-        add_button = Button(text='Add Row')
-        add_button.bind(on_press=self.add_row)
-        self.button_layout.add_widget(add_button)
-        refresh_button = Button(text='Refresh Data')
-        refresh_button.bind(on_press=self.refresh_data)
-        self.button_layout.add_widget(refresh_button)
-        self.button_layout.add_widget(Label())
+        layout = BoxLayout(orientation='vertical')
+        # child1 = BoxLayout(orientation='horizontal')
+        # child2 = BoxLayout(orientation='vertical')
+        # layout.add_widget(child1)
+        # layout.add_widget(child2)
 
-        self.scroll_view.add_widget(self.table)
+        logout_button = Button(text="Logout", font_size=20,size_hint=(0.1,0.1),pos_hint ={'center_x':.9})
+        logout_button.bind(on_press=self.logout)
+        logout_button.bind(font_size=logout_button.setter(self.width))
+        # child1.add_widget(logout_button)
+        layout.add_widget(logout_button)
+        self.add_hover_effect(logout_button)
+        label = Label(text="Welcome Nakul!", font_size=50)
+        # child1.add_widget(label)
+        layout.add_widget(label)
 
-        self.layout.add_widget(self.button_layout)
-        self.layout.add_widget(self.scroll_view)
-        print('In Review')
-        # Adding headers
+        button = Button(text="Update", font_size=30)
+        button.bind(on_press=self.go_to_update)  # Use a method
+        # child2.add_widget(button)
+        layout.add_widget(button)
+        self.add_hover_effect(button)
 
-        # Adding a button to simulate adding a new row (optional)
+        button = Button(text="Graph", font_size=30)
+        button.bind(on_press=self.go_to_Graph)  # Use a method
+        # child2.add_widget(button)
+        layout.add_widget(button)
+        self.add_hover_effect(button)
 
-        self.add_widget(self.layout)
-    def on_pre_enter(self):
-        self.refresh_data()
+        # logout_button = Button(text="Logout", font_size=30)
+        # logout_button.bind(on_press=self.logout)
+        # layout.add_widget(logout_button)
+
+        # self.add_widget(layout)
+        # self.add_hover_effect(button)
+        self.add_widget(layout)
         
+    def add_hover_effect(self,button):
+        def on_enter(instance):
+            instance.background_color = (0,0,1,1)
+        def on_leave(instance):
+            instance.background_color = (1,1,1,1)
+        button.bind(on_enter=on_enter)
+        button.bind(on_leave=on_leave)
         
-    def refresh_data(self,instance=None):
-        self.table.clear_widgets()
-        headers = ['id','From', 'To', 'Activity']
-        for header in headers:
-            self.table.add_widget(Label(text=header, bold=True))
-        database='entries'
-        table='valuess'
-        conn = sqlite3.connect(f'{database}.db')
-        c = conn.cursor()
-        
-        c.execute(f"SELECT * FROM {table} ")
-        self.data=c.fetchall()
-        # here is you table list
-        data=self.data
-        print(data)
-        
-        conn.close() 
-        # Sample data
 
-
-        # Adding data rows
-        for row in data:
-            for item in row:
-                self.table.add_widget(Label(text=str(item)))
-        
-        
-    def add_row(self, instance):
-        # This method can be expanded to actually add a new row
-        self.manager.current = 'add'
+    def go_to_update(self, instance):
+        self.manager.current = 'Update_record'
+    def go_to_Graph(self, instance):
+        self.manager.current = 'Graph'
+    def logout(self, instance):
+        self.manager.current = 'login'
