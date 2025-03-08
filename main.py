@@ -1,9 +1,20 @@
 
+import logging
 import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import * #ScreenManager,SlideTransition,WipeTransition
 import sqlite3
+for logger in logging.Logger.manager.loggerDict:
+    logging.getLogger(logger).setLevel(logging.WARNING)
+logging.basicConfig(level=logging.WARNING)
 
+# Suppress Kivy-specific logging
+kivy_logger = logging.getLogger('kivy')
+kivy_logger.setLevel(logging.WARNING)
+
+# Suppress Matplotlib-specific logging
+matplotlib_logger = logging.getLogger('matplotlib')
+matplotlib_logger.setLevel(logging.WARNING)
 kivy.require('2.0.0')
 # Import your screens
 from screens.login import LoginScreen
@@ -13,6 +24,7 @@ from screens.sania import HelloSaniaScreen
 from screens.add_screen import Add_detail
 from screens.update_record import Update_record
 from screens.Review import Review
+from screens.daily_graph import DailyGraph
 
 def init_db():
     database='entries'
@@ -39,10 +51,11 @@ class MyApp(App):
         sm.add_widget(First(name='main'))
         sm.add_widget(Add_detail(name='add'))
         sm.add_widget(Review(name='review'))
+        sm.add_widget(DailyGraph(name='daily'))
         sm.add_widget(Update_record(name='Update_record'))
         sm.add_widget(HelloWorldScreen(name='world1'))
         sm.add_widget(HelloSaniaScreen(name='sania'))
-        sm.current = 'Update_record'
+        sm.current = 'daily'
         return sm
 
 if __name__ == '__main__':
