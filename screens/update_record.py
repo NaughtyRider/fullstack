@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlite3
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
@@ -50,7 +51,7 @@ class Update_record(Screen):
         self.refresh_data()
         
         
-    def refresh_data(self, instance=None):
+    def refresh_data(self, instance=None,date=str(datetime.today().date())):
         self.table.clear_widgets()
         headers = ['ID', 'From', 'To', 'Activity', 'Update', 'Delete']
         for header in headers:
@@ -60,7 +61,11 @@ class Update_record(Screen):
         table = 'valuess'
         conn = sqlite3.connect(f'{database}.db')
         c = conn.cursor()
-        c.execute(f"SELECT * FROM {table}")
+        if str(self.date.text).replace(' ','').lower() =='selectdate':
+            c.execute(f"SELECT * FROM {table} where date = {date}")
+        else:
+            c.execute(f"SELECT * FROM {table} where date = {self.date}")
+
         self.data = c.fetchall()
         conn.close()
         

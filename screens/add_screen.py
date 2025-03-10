@@ -1,4 +1,5 @@
 
+from datetime import datetime
 import sqlite3
 from turtle import right
 from kivy.uix.screenmanager import Screen
@@ -6,11 +7,13 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from kivy.uix.dropdown import DropDown
 
 from kivymd.app import MDApp
 from kivymd.uix.pickers import MDTimePicker
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.screen import MDScreen
+from matplotlib import category
 
 class Test(MDApp):
     def __init__(self,add_detail, **kwargs):
@@ -101,6 +104,31 @@ class Add_detail(Screen):
 
         self.Activity = TextInput(hint_text="Activity",  halign='center',height=10,multiline=False,size_hint=(0.3,0.1 ),pos_hint={'center_x': 0.5})
         layout.add_widget(self.Activity)
+        dropdown = DropDown()
+        # Define the categories
+        categories = ['Education', 'Self-Care', 'Work', 'Exercise', 'Leisure','Waste']
+
+        # Create buttons for each category and add them to the dropdown
+        for category in categories:
+            btn = Button(text=category, size_hint_y=None, height=40)
+            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+            dropdown.add_widget(btn)
+
+        # Create a main button that will open the dropdown
+        self.main_button = Button(
+            text="Select Category",
+            halign='center',
+            height=10,
+            size_hint=(0.3,0.1 ),
+            pos_hint={'center_x': 0.5},
+            )
+        self.main_button.bind(on_release=dropdown.open)
+
+        # Bind the selected category to the main button's text
+        dropdown.bind(on_select=lambda  x: setattr(self.main_button, 'text', x))
+
+        # Add the button to the layout
+        layout.add_widget(self.main_button)
 
         # self.to_time = TextInput(hint_text="Group", halign='center',height=10,multiline=False,size_hint=(0.3,0.1 ),pos_hint={'center_x': 0.5})
         # layout.add_widget(self.to_time)
@@ -131,13 +159,15 @@ class Add_detail(Screen):
         from_time = self.from_time.text
         to_time = self.to_time.text
         Activity = self.Activity.text
+        # date = str(self.date.text)
+        category = str(self.main_button.text)
         # password = self.password_input.text
 
         # if username == "admin" and password == "admin":  # Check credentials (INSECURE - use hashing in real app)
         # if username == "admin" and password == "admin":  # Check credentials (INSECURE - use hashing in real app)
         # if username == "admin" and password == "admin":  # Check credentials (INSECURE - use hashing in real app)
-        if from_time and to_time and Activity:
-            self.save_to_db(from_time, to_time, Activity)
+        if from_time and to_time and Activity and category:
+            self.save_to_db(from_time, to_time, Activity,category)
             self.from_time.text = ''
             self.to_time.text = ''
             self.Activity.text = ''
@@ -151,13 +181,15 @@ class Add_detail(Screen):
         # else:
         #     popup = Popup(title='Error', content=Label(text='Invalid credentials'), size_hint=(None, None), size=(200, 100))
         #     popup.open()
-    def save_to_db(self, from_time , to_time, Activity):
+    def save_to_db(self, from_time , to_time, Activity,category):
         database='entries'
         table='valuess'
         conn = sqlite3.connect(f'{database}.db')
         c = conn.cursor()
-        c.execute(f"INSERT INTO {table} (from_time, to_time, activity) VALUES (?, ?, ?)", 
-                  (from_time , to_time, Activity))
+        date = str(datetime.today().date())
+        
+        c.execute(f"INSERT INTO {table} (date,from_time, to_time, activity,category) VALUES (?, ?, ?, ?, ?)", 
+                  (date,from_time , to_time, Activity,category))
         conn.commit()
         c.execute(f"SELECT * FROM {table} ")
         data=c.fetchall()

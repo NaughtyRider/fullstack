@@ -1,3 +1,4 @@
+from datetime import datetime
 from kivy.app import App
 from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
@@ -6,12 +7,15 @@ from kivy.uix.boxlayout import BoxLayout
 class MyApp(App):
     def build(self):
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
-
+        
+        
+        to_time = Button(text='Select Category', size_hint=(None, None), size=(200, 50))
+        layout.add_widget(to_time)
         # Create a dropdown
         dropdown = DropDown()
 
         # Define the categories
-        categories = ['Education', 'Self-Care', 'Work', 'Exercise', 'Leisure']
+        categories = ['Education', 'Self-Care', 'Work', 'Exercise', 'Leisure','Waste']
 
         # Create buttons for each category and add them to the dropdown
         for category in categories:
@@ -20,14 +24,15 @@ class MyApp(App):
             dropdown.add_widget(btn)
 
         # Create a main button that will open the dropdown
-        main_button = Button(text='Select Category', size_hint=(None, None), size=(200, 50))
-        main_button.bind(on_release=dropdown.open)
+        self.main_button = Button(text='Select Category', size_hint=(None, None), size=(200, 50))
+        self.main_button.bind(on_release=dropdown.open)
 
         # Bind the selected category to the main button's text
-        dropdown.bind(on_select=lambda instance, x: setattr(main_button, 'text', x))
+        dropdown.bind(on_select=lambda instance, x: setattr(self.main_button, 'text', x))
 
         # Add the button to the layout
-        layout.add_widget(main_button)
+        layout.add_widget(self.main_button)
+        print(datetime.today().date())
 
         return layout
 

@@ -32,7 +32,7 @@ def init_db():
     conn = sqlite3.connect(f'{database}.db')
     c = conn.cursor()
     # c.execute('drop table valuess')
-    c.execute(f'''CREATE TABLE IF NOT EXISTS {table} (id INTEGER PRIMARY KEY AUTOINCREMENT,from_time TEXT,to_time TEXT,activity TEXT)''')
+    c.execute(f'''CREATE TABLE IF NOT EXISTS {table} (id INTEGER PRIMARY KEY AUTOINCREMENT,date TEXT,from_time TEXT,to_time TEXT,activity TEXT,category TEXT)''')
     conn.commit()
     table_list = [a for a in c.execute(f"SELECT name FROM sqlite_master WHERE type = 'table' ")]
         # here is you table list
@@ -51,11 +51,11 @@ class MyApp(App):
         sm.add_widget(First(name='main'))
         sm.add_widget(Add_detail(name='add'))
         sm.add_widget(Review(name='review'))
-        sm.add_widget(DailyGraph(name='daily'))
+        sm.add_widget(DailyGraph(name='Graph'))
         sm.add_widget(Update_record(name='Update_record'))
         sm.add_widget(HelloWorldScreen(name='world1'))
         sm.add_widget(HelloSaniaScreen(name='sania'))
-        sm.current = 'daily'
+        sm.current = 'add'
         return sm
 
 if __name__ == '__main__':
