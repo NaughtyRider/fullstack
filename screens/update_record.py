@@ -57,14 +57,17 @@ class Update_record(Screen):
         for header in headers:
             self.table.add_widget(Label(text=header, bold=True))
         
-        database = 'entries'
-        table = 'valuess'
+        database = 'daily_activity'
+        table = 'activities'
         conn = sqlite3.connect(f'{database}.db')
         c = conn.cursor()
-        if str(self.date.text).replace(' ','').lower() =='selectdate':
-            c.execute(f"SELECT * FROM {table} where date = {date}")
-        else:
-            c.execute(f"SELECT * FROM {table} where date = {self.date}")
+        try:
+            if str(self.date.text).replace(' ','').lower() =='selectdate':
+                c.execute(f"SELECT * FROM {table} where date = {date}")
+            else:
+                c.execute(f"SELECT * FROM {table} where date = {self.date}")
+        except Exception as e:
+                c.execute(f"SELECT * FROM {table}")
 
         self.data = c.fetchall()
         conn.close()
