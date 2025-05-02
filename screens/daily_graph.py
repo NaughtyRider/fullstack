@@ -144,7 +144,9 @@ class DailyGraph(Screen):
 
     def load_data_and_plot(self,instance):
         # Load the data from the CSV file
-        data = pd.read_csv('daily_activity_data.csv')
+        data = pd.read_csv('screens/daily_activity_data.csv')
+        print("------------------------------------------")
+        print(len(data))
         print(self.date.text)
         if self.date !='Select Date':
             data=data[data['date'].astype(str)==str(self.date.text)]

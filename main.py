@@ -55,7 +55,7 @@ class MyApp(App):
         sm.add_widget(Update_record(name='Update_record'))
         sm.add_widget(HelloWorldScreen(name='world1'))
         sm.add_widget(HelloSaniaScreen(name='sania'))
-        sm.current = 'review'
+        sm.current = 'Graph'
         return sm
 
 if __name__ == '__main__':
