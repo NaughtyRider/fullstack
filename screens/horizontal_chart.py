@@ -2,9 +2,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the data from the CSV file
-data = pd.read_csv('daily_activity_data.csv')
+data = pd.read_csv('fullstack/screens/daily_activity_data.csv')
+data['date'] = pd.to_datetime(data['date'])
 
+# Create a 'month' column
+data['month'] = data['date'].dt.strftime('%m-%Y')
 # Count the occurrences of each activity
+print(len(data))
+month='02-2025'
+data = data[data['month']==month]
+print(len(data))
 activity_counts = data['activity'].value_counts()
 
 # Create a bar chart
